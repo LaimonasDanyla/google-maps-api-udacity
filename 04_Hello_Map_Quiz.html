@@ -49,27 +49,107 @@ API Course, Lesson 1 -->
 
      // TODO: Complete the following function to initialize the map
      function initMap() {
+       // Create a styles array to use with the map.
+       var styles = [
+         {
+           featureType: 'water',
+           stylers: [
+             { color: '#19a0d8' }
+           ]
+         },{
+           featureType: 'administrative',
+           elementType: 'labels.text.stroke',
+           stylers: [
+             { color: '#ffffff' },
+             { weight: 6}
+           ]
+         },{
+           featureType: 'administrative',
+           elementType: 'labels.text.fill',
+           stylers: [
+             { color: '#e85113' }
+           ]
+         },{
+           featureType: 'road.highway',
+           elementType: 'geometry.stroke',
+           stylers: [
+             { color: '#efe9e4' },
+             { lightness: -40 }
+           ]
+         },{
+           featureType: 'transit.station',
+           stylers: [
+             { weight: 9 },
+             { hue: '#e85113' }
+           ]
+         },{
+           featureType: 'road.highway',
+           elementType: 'labels.icon',
+           stylers: [
+             { visibility: 'off' }
+           ]
+         },{
+           featureType: 'water',
+           elementType: 'labels.text.fill',
+           stylers: [
+             { lightness: 100 }
+           ]
+         },{
+           featureType: 'water',
+           elementType: 'labels.tex.fill',
+           stylers: [
+             { lightness: -100 }
+           ]
+         },{
+           featureType: 'poi',
+           elementType: 'geometry',
+           stylers: [
+             { visibility: 'on'},
+             { color: '#f0e4d3'}
+           ]
+         },{
+           featureType: 'road.highway',
+           elementType: 'geometry.fill',
+           stylers: [
+             { color: '#efe9e4' },
+             { lightness: -25 }
+           ]
+         }
+       ];
        // TODO: use a constructor to create a new map JS object. You can use the coordinates
        // we used, 40.7413549, -73.99802439999996 or your own!
        map = new google.maps.Map(document.getElementById('map'), {
-         center: {lat: 54.91647, lng: 23.915957},
-         zoom: 13
+         center: {lat: 40.7413549, lng: -73.9980244},
+         zoom: 13,
+         styles: styles,
+         mapTypeControl: false
        });
 
        // add schools, but it could be received form database.
        var locations = [
-         {title: 'Grinius Gymnasium', location: {lat: 54.928588, lng: 23.931758}},
-         {title: 'Rasa Gymnasium', location: {lat: 54.927032, lng: 23.955992}},
-         {title: 'KTU Lyceum', location: {lat: 54.920053, lng: 23.935999}}
+         {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
+         {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},
+         {title: 'Union Square Open Floor Plan', location: {lat: 40.7347062, lng: -73.9895759}},
+         {title: 'East Village Hip Studio', location: {lat: 40.7281777, lng: -73.984377}},
+         {title: 'TriBeCa Artsy Bachelor Pad', location: {lat: 40.7195264, lng: -74.0089934}},
+         {title: 'Chinatown Homey Space', location: {lat: 40.7180628, lng: -73.9961237}}
        ];
 
        var largeInfowindow = new google.maps.InfoWindow();
+
+       //Style markers. This will be listing maker icon.
+       var defaultIcon = makeMarkerIcon('0091ff');
+
+       //Create a "highlighted location" marker color for whne the user mouses
+       // over the marker.
+       var highlightedIcon = makeMarkerIcon('FFFF24');
+
+
        //Set the boundaries to fit everythign the user can see
        // It captures the South-West adn North-East corners of the viewport
        var bounds = new google.maps.LatLngBounds();
        //the following group uses the location array to create an array of markers
        // to initialize
-
        for (var i = 0;  i < locations.length; i++) {
          //get the position from the location array
          var position = locations[i].location;
@@ -93,6 +173,15 @@ API Course, Lesson 1 -->
          });
        }
        map.fitBounds(bounds);
+
+       //Two event listeners - for mos and for mouseout, to chnage colors
+       // back and forth.
+       marker.addListener('mouseover', function() {
+         this.setIcon(highlightedIcon);
+       });
+       marker.addListener('mouseout', function() {
+         this.setIcon(defaultIcon);
+       });
 
        document.getElementById('show-listings').addEventListener('click', showListings);
        document.getElementById('hide-listings').addEventListener('click', hideListings);
@@ -128,7 +217,20 @@ API Course, Lesson 1 -->
          }
        };
 
-     }
+      //This function takes in colorm creates new marker icon of that color.
+      //Icon size will be 21x wide x 34 high, origin of 0, 0
+      //and be anchored at 10, 34
+      function makeMarkerIcon(markerColor) {
+        var markerImage = new google.maps.MarkerImage(
+          'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' +
+          markerColor + '|40|_|%E2%80%A2',
+          new google.maps.Size(21, 34),
+          new google.maps.Point(0, 0),
+          new google.maps.Point(10, 34),
+          new google.maps.Size(21, 34));
+        return markerImage;
+      }
+    }
    </script>
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
    <script async defer
