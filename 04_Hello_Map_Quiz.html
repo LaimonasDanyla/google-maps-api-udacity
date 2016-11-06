@@ -5,10 +5,38 @@ API Course, Lesson 1 -->
  <!-- styles put here, but you can include a CSS file and reference it instead! -->
    <style type="text/css">
      html, body { height: 100%; margin: 0; padding: 0; }
-     #map { height: 100%; }
+     #map {
+       bottom: 0px;
+       height: 100%;
+       left: 362px;
+       position: absolute;
+       right: 0px;
+      }
+      .options-box {
+        background: #fff;
+        border: 1px solid #999;
+        border-radius: 3px;
+        height: 100%;
+        line-height: 35px;
+        padding: 10px 10px 30px 10px;
+        text-align: left;
+        width: 340px;
+      }
+
+
    </style>
  </head>
  <body>
+   <div class="container">
+     <div class="options-box">
+       <h1>Find your place</hi>
+         <div>
+           <input id="show-listings" type="button" value="Show Listings">
+           <input id="hide-listings" type="button" value="Hide Listings">
+         </div>
+     </div>
+   </div>
+
    <!-- TODO 1: Create a place to put the map in the HTML-->
    <div id="map"></div>
    <script>
@@ -42,7 +70,7 @@ API Course, Lesson 1 -->
        //the following group uses the location array to create an array of markers
        // to initialize
 
-       for (var i = 0;  i< locations.length; i++) {
+       for (var i = 0;  i < locations.length; i++) {
          //get the position from the location array
          var position = locations[i].location;
          var title = locations[i].title;
@@ -65,6 +93,11 @@ API Course, Lesson 1 -->
          });
        }
        map.fitBounds(bounds);
+
+       document.getElementById('show-listings').addEventListener('click', showListings);
+       document.getElementById('hide-listings').addEventListener('click', hideListings);
+
+
        //This function populates infowindow when marker is clicked.
        //One window will be opened, based on its marker position.
        function populateInfoWindow(marker, infowindow){
@@ -78,6 +111,22 @@ API Course, Lesson 1 -->
            });
          }
        }
+       //This function will loop through the markers array and dislpay them all.
+       function showListings() {
+         var bounds = new google.maps.LatLngBounds();
+         // Extend the boundaries of the map for each marker and display the marker.
+         for (var i = 0; i < markers.length; i++) {
+           markers[i].setMap(map);
+           bounds.extend(markers[i].position);
+         }
+         map.fitBounds(bounds);
+       };
+       //This function will loop through the listings and hide them all.
+       function hideListings() {
+         for (var i = 0; i < markers.length; i++) {
+           markers[i].setMap(null);
+         }
+       };
 
      }
    </script>
