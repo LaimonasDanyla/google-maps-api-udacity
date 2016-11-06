@@ -26,7 +26,13 @@ API Course, Lesson 1 -->
        var marker = new google.maps.Marker({
          position: klinikos,
          map: map,
-         title: "first Marker: Klinikos"
+         title: "First Marker: Klinikos"
+       });
+       var infowindow = new google.maps.InfoWindow({
+         content: "THE CONTENT OF THE MARKER"
+       });
+       marker.addListener('click', function() {
+         infowindow.open(map, marker);
        });
      }
    </script>
