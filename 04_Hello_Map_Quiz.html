@@ -22,6 +22,12 @@ API Course, Lesson 1 -->
          center: {lat: 54.91647, lng: 23.915957},
          zoom: 13
        });
+       var klinikos = {lat: 54.91647, lng: 23.915957};
+       var marker = new google.maps.Marker({
+         position: klinikos,
+         map: map,
+         title: "first Marker: Klinikos"
+       });
      }
    </script>
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
