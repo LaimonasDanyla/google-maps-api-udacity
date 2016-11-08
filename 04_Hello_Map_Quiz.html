@@ -5,6 +5,11 @@ API Course, Lesson 1 -->
  <!-- styles put here, but you can include a CSS file and reference it instead! -->
    <style type="text/css">
      html, body { height: 100%; margin: 0; padding: 0; }
+     .container {
+       height: 100%;
+       position: relative;
+     }
+
      #map {
        bottom: 0px;
        height: 100%;
@@ -21,6 +26,11 @@ API Course, Lesson 1 -->
         padding: 10px 10px 30px 10px;
         text-align: left;
         width: 340px;
+      }
+
+      #pano {
+        width: 200px;
+        height: 200px;
       }
 
 
@@ -195,9 +205,59 @@ API Course, Lesson 1 -->
            infowindow.setContent('<div>' + marker.title + '</div>');
            infowindow.open(map, marker);
            //Make sure the marker porperty is cleared if the window is closed
-           infowindow.addListener('closeclick', function(){
-             infowindow.setMarker(null);
+           infowindow.addListener('closeclick', function() {
+             //infowindow.setMarker(null); did not work
+             infowindow.marker = null;
            });
+
+           // creating street view object. this service needs to get panorama
+           //image based on the closest location of the marker and needs
+           //to find out to witch way to point out the camera: the HEADING and aPITCH.
+           var streetViewService = new google.maps.StreetViewService();
+           // radius - in this case is 50 meters around the marker that it will
+           //be looking for imagery. There might be no images at the exact
+           //Lat/Lng location.
+           var radius = 50;
+           // In case the status is OK, which means the pano was found, compute the
+           // position of the streetview image, then calculate the heading, then get a
+           // panorama from that and set the options
+           function getStreetView(data, status) {
+             //(status == google.maps.StreetViewStatus.OK) did not work
+             if (status === 'OK') {
+               //take nearby street view location
+               var nearStreetViewLocation = data.location.latLng;
+               //compute the heading based of location of nearest view and
+               // location of our marker.
+               // computeHeading() function computes correct heading so that
+               //wea re looking at our building from the nearest Street view location
+               var heading = google.maps.geometry.spherical.computeHeading(
+                 nearStreetViewLocation, marker.position);
+                 //Created panorma object will placed at id=pano.
+                 infowindow.setContent('<div>' + marker.title + '</div>' +
+               '<div id="pano"></div>');
+               //Set panorama options: the position of the nearest StreetViewLocation
+               //and that the point or view we are using is oging to be a heading
+               //that we just computed.  Pitch of 30 shows slightly up to the building
+               var panoramaOptions = {
+                 position: nearStreetViewLocation,
+                 pov: {
+                   heading: heading,
+                   pitch: 30
+                 }
+               };
+               var panorama = new google.maps.StreetViewPanorama(
+                 document.getElementById('pano'), panoramaOptions);
+               } else {
+                 infowindow.setContent('div' + marker.title + '</div>' +
+               '<div>No Street View Found</div>');
+             }
+           }
+           //Use streetview service to get the closes streetview image within
+           //50 meters of the markers position
+           streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+           // Open infowindow on the correct marker
+           infowindow.open(map, marker);
+
          }
        }
        //This function will loop through the markers array and dislpay them all.
@@ -233,8 +293,9 @@ API Course, Lesson 1 -->
     }
    </script>
    <!--TODO: Load the JS API ASYNCHRONOUSLY below.-->
+   <!-- For the street View Use the google geometry library libraries=geometry -->
    <script async defer
-       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN5t62HzSbKb7KGiVMTiQZ-7dkJ4GcKx4&v=3&callback=initMap">
+       src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyAN5t62HzSbKb7KGiVMTiQZ-7dkJ4GcKx4&v=3&callback=initMap">
    </script>
  </body>
 </html>
