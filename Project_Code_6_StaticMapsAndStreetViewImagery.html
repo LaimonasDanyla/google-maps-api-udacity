@@ -235,7 +235,7 @@
           // position of the streetview image, then calculate the heading, then get a
           // panorama from that and set the options
           function getStreetView(data, status) {
-            if (status == google.maps.StreetViewStatus.OK) {
+            if (status === 'OK') {
               var nearStreetViewLocation = data.location.latLng;
               var heading = google.maps.geometry.spherical.computeHeading(
                 nearStreetViewLocation, marker.position);
@@ -298,7 +298,7 @@
 
     <script async defer
         src=
-        "https://maps.googleapis.com/maps/api/js?key=MYAPIKEY&libraries=geometry&v=3&callback=initMap">
+        "https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyAN5t62HzSbKb7KGiVMTiQZ-7dkJ4GcKx4&v=3&callback=initMap">
     </script>
 
   </body>
