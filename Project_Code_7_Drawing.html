@@ -96,8 +96,6 @@
 
       //5. This global polygon variable is to ensure only ONE polygon is rendered.
       //It is changed every time the user draws new polygon.
-
-
       var polygon = null;
 
       function initMap() {
@@ -395,7 +393,13 @@
             markers[i].setMap(null);
           }
         }
+        //Count polygon area
+        var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+        window.alert(area/1000000 + " km2");
       }
+
+
+
     </script>
 <!-- 1. add api key-->
     <script async defer
